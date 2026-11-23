@@ -1,6 +1,4 @@
-import { tratamientos } from "./datos/tratamientos.js";
-import { profesionales } from "./datos/profesionales.js";
-import { horarios } from "./datos/horarios.js";
+import { obtenerTratamientos, obtenerProfesionales, obtenerHorarios } from "./cargarDatos.js";
 import { urlServicioTurnos } from "./datos/configuracion.js";
 import { obtenerUsuarioActivo } from "./usuarios.js";
 import { guardarTurno } from "./turnos.js";
@@ -9,44 +7,14 @@ const idTratamiento = sessionStorage.getItem("tratamiento");
 const idProfesional = sessionStorage.getItem("profesional");
 const idHorario = sessionStorage.getItem("horario");
 
-const tratamiento = tratamientos.find((t) => t.id === idTratamiento);
-const profesional = profesionales.find((p) => p.id === idProfesional);
 const usuario = obtenerUsuarioActivo();
 
+// se completan cuando terminan de cargarse los datos
+let tratamiento = null;
+let profesional = null;
 let diaElegido = null;
 let turnoElegido = null;
 
-horarios.forEach((dia) => {
-    const turno = dia.turnos.find((t) => t.id === idHorario);
-    if (turno) {
-        diaElegido = dia;
-        turnoElegido = turno;
-    }
-});
-
-const textoHorario = turnoElegido
-    ? `${diaElegido.dia} - ${turnoElegido.hora}`
-    : "No seleccionado";
-
-// --- Resumen en pantalla ---
-document.querySelector("#resumen-paciente").textContent =
-    usuario ? `${usuario.nombre} ${usuario.apellido}` : "No identificado";
-
-document.querySelector("#resumen-telefono").textContent =
-    usuario ? usuario.telefono : "No disponible";
-
-document.querySelector("#resumen-correo").textContent =
-    usuario ? usuario.correo : "No disponible";
-
-document.querySelector("#resumen-tratamiento").textContent =
-    tratamiento ? tratamiento.nombre : "No seleccionado";
-
-document.querySelector("#resumen-profesional").textContent =
-    profesional ? profesional.nombre : "No seleccionado";
-
-document.querySelector("#resumen-horario").textContent = textoHorario;
-
-// --- Confirmacion del turno ---
 const botonConfirmar = document.querySelector("#boton-confirmar");
 const mensaje = document.querySelector("#mensaje-confirmacion");
 const textoBotonOriginal = botonConfirmar.textContent;
@@ -61,9 +29,63 @@ function restaurarBoton() {
     botonConfirmar.textContent = textoBotonOriginal;
 }
 
+// --- datos del paciente ---
+document.querySelector("#resumen-paciente").textContent =
+    usuario ? `${usuario.nombre} ${usuario.apellido}` : "No identificado";
+
+document.querySelector("#resumen-telefono").textContent =
+    usuario ? usuario.telefono : "No disponible";
+
+document.querySelector("#resumen-correo").textContent =
+    usuario ? usuario.correo : "No disponible";
+
+// deshabilitar boton hasta cargar todos los datos
+botonConfirmar.disabled = true;
+
+async function cargarResumen() {
+    try {
+        const [tratamientos, profesionales, horarios] = await Promise.all([
+            obtenerTratamientos(),
+            obtenerProfesionales(),
+            obtenerHorarios(),
+        ]);
+
+        tratamiento = tratamientos.find((t) => t.id === idTratamiento) || null;
+        profesional = profesionales.find((p) => p.id === idProfesional) || null;
+
+        horarios.forEach((dia) => {
+            const turno = dia.turnos.find((t) => t.id === idHorario);
+            if (turno) {
+                diaElegido = dia;
+                turnoElegido = turno;
+            }
+        });
+
+        document.querySelector("#resumen-tratamiento").textContent =
+            tratamiento ? tratamiento.nombre : "No seleccionado";
+
+        document.querySelector("#resumen-profesional").textContent =
+            profesional ? profesional.nombre : "No seleccionado";
+
+        document.querySelector("#resumen-horario").textContent =
+            turnoElegido ? `${diaElegido.dia} - ${turnoElegido.hora}` : "No seleccionado";
+
+        botonConfirmar.disabled = false;
+    } catch (error) {
+        console.error("Error al cargar los datos del resumen:", error);
+        mostrarMensaje("No se pudieron cargar los datos del turno. Recargue la pagina.", true);
+    }
+}
+
+// --- confirmar del turno ---
 botonConfirmar.addEventListener("click", async () => {
     if (!usuario || !tratamiento || !profesional || !turnoElegido) {
         mostrarMensaje("Faltan datos del turno. Vuelva al inicio y seleccionelos nuevamente.", true);
+        return;
+    }
+
+    if (!profesional.tratamientos.includes(tratamiento.id)) {
+        mostrarMensaje("El profesional elegido no realiza ese tratamiento. Vuelva al inicio y seleccione nuevamente.", true);
         return;
     }
 
@@ -133,3 +155,5 @@ botonConfirmar.addEventListener("click", async () => {
         restaurarBoton();
     }
 });
+
+cargarResumen();

@@ -8,7 +8,7 @@ function mostrarError(texto) {
     mensaje.className = "mensaje-estado mensaje-error";
 }
 
-// Se crea la cuenta de demostracion al abrir la pagina; el envio del formulario espera a que termine
+// crea la cuenta de demostracion al abrir la pagina; el envio del formulario espera a que termine
 const preparacion = precargarUsuarioDemo().catch((error) => {
     console.error("No se pudo precargar la cuenta de demostracion:", error);
 });

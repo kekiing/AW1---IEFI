@@ -24,7 +24,7 @@ export function guardarUsuario(usuario) {
     localStorage.setItem(claveUsuarios, JSON.stringify(usuarios));
 }
 
-// Convierte la contraseña en un hash SHA-256 para no guardarla en texto plano
+// convierte la contraseña en un hash SHA-256 para no guardarla en texto plano
 export async function generarHash(password, correo) {
     const texto = `${correo.trim().toLowerCase()}:${password}`;
     const bytes = new TextEncoder().encode(texto);
@@ -35,7 +35,7 @@ export async function generarHash(password, correo) {
         .join("");
 }
 
-// Crea la cuenta de demostracion si todavia no existe en este navegador
+// crea la cuenta de demostracion si todavia no existe en este navegador
 export async function precargarUsuarioDemo() {
     if (buscarUsuarioPorCorreo(usuarioDemo.correo)) {
         return;
@@ -54,7 +54,7 @@ export async function precargarUsuarioDemo() {
     });
 }
 
-// Sesion activa: solo se guarda el correo, nunca la contraseña ni su hash
+// sesion activa: solo se guarda el correo, nunca la contraseña ni su hash
 export function guardarSesion(correo) {
     sessionStorage.setItem(claveSesion, correo);
 }
@@ -64,7 +64,7 @@ export function obtenerUsuarioActivo() {
     return correo ? buscarUsuarioPorCorreo(correo) : null;
 }
 
-// Borra la sesion y tambien las elecciones de la reserva en curso
+// borra la sesion y tambien las elecciones de la reserva en curso
 export function cerrarSesion() {
     sessionStorage.clear();
 }

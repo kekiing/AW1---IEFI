@@ -1,10 +1,9 @@
-import { profesionales } from "./datos/profesionales.js";
-import { tratamientos } from "./datos/tratamientos.js";
+import { obtenerProfesionales, obtenerTratamientos } from "./cargarDatos.js";
 import { habilitarBoton, guardarEleccion } from "./funciones.js";
 
 const idTratamiento = sessionStorage.getItem("tratamiento");
 
-// Sin tratamiento elegido no hay profesionales para mostrar: se vuelve al paso anterior
+// sin tratamiento elegido no hay profesionales para mostrar. Vuelve atras
 if (!idTratamiento) {
     window.location.replace("./tratamiento.html");
 }
@@ -14,17 +13,17 @@ const filtro = document.querySelector("#filtro-tratamiento");
 const cantidad = document.querySelector("#cantidad-profesionales");
 const boton = document.querySelector(".formulario-seleccion button");
 
-// Opciones del filtro: todos los tratamientos, con el elegido en el paso anterior seleccionado
-let opcionesHTML = ``;
+let profesionales = [];
 
-tratamientos.forEach((tratamiento) => {
-    const seleccionado = tratamiento.id === idTratamiento ? "selected" : "";
-    opcionesHTML += `<option value="${tratamiento.id}" ${seleccionado}>${tratamiento.nombre}</option>`;
+habilitarBoton(lista, boton);
+guardarEleccion(lista, "profesional");
+
+// si cambia de profesional cambia el horario disponiblem
+lista.addEventListener("change", () => {
+    sessionStorage.removeItem("horario");
 });
 
-filtro.innerHTML = opcionesHTML;
-
-// Muestra solo los profesionales que realizan el tratamiento indicado
+// filtra  los profesionales disponibles segun el tratamiento que se busca
 function mostrarProfesionales(idTratamientoFiltrado) {
     const profesionalesDisponibles = profesionales.filter((profesional) =>
         profesional.tratamientos.includes(idTratamientoFiltrado)
@@ -51,21 +50,11 @@ function mostrarProfesionales(idTratamientoFiltrado) {
         ? "1 profesional disponible"
         : `${profesionalesDisponibles.length} profesionales disponibles`;
 
-    // Al volver a dibujar la lista no queda ninguna opcion marcada
+    // al volver a dibujar la lista no queda ninguna opcion marcada
     boton.disabled = true;
 }
 
-mostrarProfesionales(idTratamiento);
-
-habilitarBoton(lista, boton);
-guardarEleccion(lista, "profesional");
-
-// Al cambiar de profesional se descarta el horario elegido anteriormente
-lista.addEventListener("change", () => {
-    sessionStorage.removeItem("horario");
-});
-
-// Al cambiar el filtro se actualiza el tratamiento elegido y se descartan
+// al cambiar el filtro se actualiza el tratamiento elegido y se descartan
 // el profesional y el horario, porque dependen del tratamiento
 filtro.addEventListener("change", () => {
     sessionStorage.setItem("tratamiento", filtro.value);
@@ -74,3 +63,32 @@ filtro.addEventListener("change", () => {
 
     mostrarProfesionales(filtro.value);
 });
+
+async function iniciar() {
+    try {
+        const [tratamientos, listaProfesionales] = await Promise.all([
+            obtenerTratamientos(),
+            obtenerProfesionales(),
+        ]);
+
+        profesionales = listaProfesionales;
+
+        // opciones del filtro: todos los tratamientos, con el elegido en el paso anterior seleccionado
+        let opcionesHTML = ``;
+
+        tratamientos.forEach((tratamiento) => {
+            const seleccionado = tratamiento.id === idTratamiento ? "selected" : "";
+            opcionesHTML += `<option value="${tratamiento.id}" ${seleccionado}>${tratamiento.nombre}</option>`;
+        });
+
+        filtro.innerHTML = opcionesHTML;
+
+        mostrarProfesionales(idTratamiento);
+    } catch (error) {
+        console.error("Error al cargar los profesionales:", error);
+        lista.innerHTML = `<li>No se pudieron cargar los profesionales. Intente nuevamente.</li>`;
+        cantidad.textContent = "";
+    }
+}
+
+iniciar();
