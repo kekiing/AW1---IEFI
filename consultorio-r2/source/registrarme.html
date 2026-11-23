@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>consultorio R2 - Registrarme</title>
+    <link rel="stylesheet" href="./css/index.css">
+    <script type="module" src="./js/registro.js"></script>
+</head>
+<body>
+
+    <header class="cabecera-principal">
+        <a class="enlace-inicio" href="./index.html">
+            <img class="logotipo" src="./img/diente.svg" alt="logotipo clinica">
+        </a>
+    </header>
+
+    <main class="contenido-principal">
+        <h1>Crear cuenta nueva</h1>
+
+        <form class="formulario-datos" action="./index.html" method="post">
+            <label for="id-nombre">Nombre</label>
+            <input type="text" name="nombre" id="id-nombre"
+                required minlength="2" maxlength="50"
+                pattern="[A-Za-zÁÉÍÓÚÜÑáéíóúüñ\s'\-]+"
+                title="Solo letras, sin numeros ni simbolos"
+                autocomplete="given-name">
+
+            <label for="id-apellido">Apellido</label>
+            <input type="text" name="apellido" id="id-apellido"
+                required minlength="2" maxlength="50"
+                pattern="[A-Za-zÁÉÍÓÚÜÑáéíóúüñ\s'\-]+"
+                title="Solo letras, sin numeros ni simbolos"
+                autocomplete="family-name">
+
+            <label for="id-dni">DNI</label>
+            <input type="text" name="dni" id="id-dni"
+                required inputmode="numeric" maxlength="8"
+                pattern="\d{7,8}"
+                title="Ingrese 7 u 8 digitos, sin puntos"
+                placeholder="Sin puntos">
+
+            <label for="id-obra-social">Obra social</label>
+            <input type="text" name="obra_social" id="id-obra-social"
+                maxlength="50"
+                placeholder="Opcional. Si no posee, deje vacio">
+
+            <label for="id-telefono">Telefono</label>
+            <input type="tel" name="telefono" id="id-telefono"
+                required inputmode="numeric" maxlength="10"
+                pattern="\d{10}"
+                title="Ingrese 10 digitos: codigo de area sin 0 y numero sin 15"
+                placeholder="Ej: 3511234567"
+                autocomplete="tel-national">
+
+            <label for="id-correo">Correo electronico</label>
+            <input type="email" name="correo" id="id-correo"
+                required maxlength="100"
+                placeholder="nombre@ejemplo.com"
+                autocomplete="email">
+
+            <label for="id-password">Contraseña</label>
+            <input type="password" name="password" id="id-password"
+                required minlength="8" maxlength="64"
+                autocomplete="new-password">
+
+            <label for="id-password-confirmar">Confirmar contraseña</label>
+            <input type="password" name="password_confirmar" id="id-password-confirmar"
+                required minlength="8" maxlength="64"
+                autocomplete="new-password">
+
+            <p class="mensaje-estado" id="mensaje-registro" role="alert"></p>
+
+            <button type="submit">Registrarme</button>
+            <button class="boton-secundario" type="button" onclick="history.back()">Volver atras</button>
+        </form>
+    </main>
+
+    <footer class="pie-principal">
+        <ul class="redes-sociales">
+            <li>
+                <a href="https://instagram.com/@consultorioR2" target="_blank">
+                    @consultorioR2
+                </a>
+            </li>
+        </ul>
+    </footer>
+
+</body>
+</html>
