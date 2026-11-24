@@ -1,0 +1,10 @@
+{
+    "name": "tp4-consultorio-r2",
+    "version": "1.0.0",
+    "description": "Turnero web del Consultorio R2 - pruebas unitarias con el test runner nativo de Node",
+    "private": true,
+    "type": "module",
+    "scripts": {
+        "test": "node --test"
+    }
+}
