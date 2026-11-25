@@ -1,0 +1,28 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  pruebas:
+    name: Pruebas unitarias
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: consultorio-r2
+
+    steps:
+      - name: Descargar el codigo
+        uses: actions/checkout@v6
+
+      - name: Instalar Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: 22
+
+      - name: Ejecutar las pruebas
+        run: npm test
