@@ -1,0 +1,20 @@
+[
+    {
+        "id": "dr1",
+        "nombre": "Dr. Ezequiel Salomon",
+        "matricula": "91218",
+        "tratamientos": ["ortodoncia", "implante", "general"]
+    },
+    {
+        "id": "dr2",
+        "nombre": "Dr. Geronimo Rodriguez",
+        "matricula": "34012",
+        "tratamientos": ["periodoncia", "implante", "blanqueamiento", "general"]
+    },
+    {
+        "id": "dr3",
+        "nombre": "Dr. Valentin Acuña",
+        "matricula": "91220",
+        "tratamientos": ["periodoncia", "blanqueamiento", "ortodoncia"]
+    }
+]

@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>consultorio R2 - Recuperar cuenta</title>
+    <link rel="stylesheet" href="./css/index.css">
+    <script type="module" src="./js/recuperarCuenta.js"></script>
+</head>
+<body>
+
+    <header class="cabecera-principal">
+        <a class="enlace-inicio" href="./index.html">
+            <img class="logotipo" src="./img/diente.svg" alt="logotipo clinica">
+        </a>
+    </header>
+
+    <main class="contenido-principal">
+        <h1>Recuperar cuenta</h1>
+
+        <p id="texto-introduccion">Ingresa el correo electronico y el DNI con los que te registraste para verificar tu identidad.</p>
+
+        <form class="formulario-datos" id="formulario-verificacion" method="post">
+            <label for="id-correo">Correo electronico</label>
+            <input type="email" name="correo" id="id-correo"
+                required maxlength="100" autocomplete="email">
+
+            <label for="id-dni">DNI</label>
+            <input type="text" name="dni" id="id-dni"
+                required inputmode="numeric" maxlength="8"
+                pattern="\d{7,8}"
+                title="Ingrese 7 u 8 digitos, sin puntos"
+                placeholder="Sin puntos">
+
+            <button type="submit">Verificar identidad</button>
+        </form>
+
+        <form class="formulario-datos" id="formulario-nueva-password" method="post" hidden>
+            <label for="id-password">Nueva contraseña</label>
+            <input type="password" name="password" id="id-password"
+                required minlength="8" maxlength="64"
+                autocomplete="new-password">
+
+            <label for="id-password-confirmar">Confirmar nueva contraseña</label>
+            <input type="password" name="password_confirmar" id="id-password-confirmar"
+                required minlength="8" maxlength="64"
+                autocomplete="new-password">
+
+            <button type="submit">Guardar nueva contraseña</button>
+        </form>
+
+        <p class="mensaje-estado" id="mensaje-recuperacion" role="alert"></p>
+
+        <a class="enlace-auxiliar" href="./index.html">Volver al inicio de sesion</a>
+    </main>
+
+    <footer class="pie-principal">
+        <ul class="redes-sociales">
+            <li>
+                <a href="https://instagram.com/@consultorioR2" target="_blank">
+                    @consultorioR2
+                </a>
+            </li>
+        </ul>
+    </footer>
+
+</body>
+</html>

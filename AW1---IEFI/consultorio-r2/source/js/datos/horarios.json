@@ -1,0 +1,7 @@
+{
+    "inicioJornada": "08:00",
+    "finJornada": "18:00",
+    "duracionMinutos": 90,
+    "diasAMostrar": 5,
+    "diasLaborables": [1, 2, 3, 4, 5]
+}
